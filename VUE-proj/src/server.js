@@ -1,34 +1,93 @@
-/* import path from "path";
+// Node.js utility
+import path from "path";
 import fs from "fs";
-import { fileURLToPath } from "url"; */
-/*
-import courseRouter from "./router/courseRouter";
-import projectRouter from "./router/projectRouter";
+import { fileURLToPath } from "url";
+//import store from "./store"
 
+//import "./assets/main.css";
 
 // Vite
-/* import { createServer } from "vite"; */
-/*
-const app = express();
+import { createServer } from "vite";
 
-app.use(function (request, response, next) {
-	response.setHeader("Access-Control-Allow-Origin", "*")
-	response.setHeader("Access-Control-Allow-Methods", "*")
-	response.setHeader("Access-Control-Allow-Headers", "*")
-	response.setHeader("Access-Control-Expose-Headers", "*")
-	next()
-})
+// Express
+import express from "express";
 
-app.use("/sandbox", projectRouter);
+// eslint-disable-next-line no-undef
+const isProd = process.env.NODE_ENV === "production";
 
-app.use("/course", courseRouter);
+// Helpers
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const resolve = (p) => path.resolve(__dirname, p);
 
+const getIndexHTML = async () => {
+  const indexHTML = isProd
+    ? resolve("../dist/client/index.html")
+    : resolve("../index.html");
+  const html = await fs.promises.readFile(indexHTML, "utf-8");
+  return html;
+};
 
+async function start() {
+  const manifest = isProd
+    ? JSON.parse(
+        fs.readFileSync(resolve("../dist/client/ssr-manifest.json"), "utf-8")
+      )
+    : null;
 
-//app.use("/user", userRouter);
+  const app = express();
+  const router = express.Router();
+  
 
-app.listen(3000, () => {
-  console.log("Сервер запущен");
-});
+  let vite = null;
+  if (isProd) {
+    app.use(express.static("dist/client", { index: false }));
+  } else {
+    vite = await createServer({
+      // eslint-disable-next-line no-undef
+      root: process.cwd(),
+      server: { middlewareMode: true },
+      appType: "custom",
+    });
 
-//start(); */
+    app.use(vite.middlewares);
+  }
+
+  // Ловим все запросы, а вообще можно продублировать тут
+  // логику из src/router.js
+  router.get("/*", async (req, res, next) => {
+    try {
+      const url = req.url;
+      let template = await getIndexHTML();
+
+      let render = null;
+      if (isProd) {
+        render = (await import("../dist/server/main-server.js")).render;
+      } else {
+        template = await vite.transformIndexHtml(url, template);
+        render = (await vite.ssrLoadModule(resolve("./main-server.js"))).render;
+      }
+
+      const [appHtml, preloadLinks] = await render(url, manifest);
+      const html = template
+        .replace(`<!--preload-links-->`, preloadLinks)
+        .replace("<!--app-html-->", appHtml);
+
+      res.status(200).set({ "Content-Type": "text/html" }).end(html);
+    } catch (e) {
+      if (vite) {
+        vite.ssrFixStacktrace(e);
+      }
+      next(e);
+    }
+  });
+
+  // Routes
+  app.use("/", router);
+  //app.use(store);
+
+  app.listen(3000, () => {
+    console.log("Сервер запущен");
+  });
+}
+
+start();
