@@ -10,7 +10,7 @@
         <a @click="$router.push(`/course/${course.id}`)" class="courselink">
           <div class="col">
             <div class="card h-100 shadow">
-              <img src="/img/sql-1024x572.jpg" class="card-img-top" alt="..." />
+              <img src="./img/sql-1024x572.jpg" class="card-img-top" alt="..." />
               <div class="card-body">
                 <h5 class="card-title">{{ course.name }}</h5>
                 <p class="card-text">{{ course.description }}</p>

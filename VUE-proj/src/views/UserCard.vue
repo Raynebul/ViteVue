@@ -6,8 +6,8 @@
       <div class="card mb-3" style="max-width: 540px; border: none">
         <div class="row g-0">
           <div class="col-md-4">
-            <img
-              src="/img/free-settings-icon-3110-thumb.png"
+           <img
+              src="./img/free-settings-icon-3110-thumb.png"
               class="img-fluid rounded-start"
               alt="..."
               width="100"

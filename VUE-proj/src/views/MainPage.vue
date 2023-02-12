@@ -18,7 +18,7 @@
       <div class="row g-0">
         <div class="col-md-4">
           <img
-            src="/img/sql-1024x572.jpg"
+            src="./img/sql-1024x572.jpg"
             class="img-fluid rounded-start"
             alt="..."
           />
@@ -48,7 +48,7 @@
         </div>
         <div class="col-md-4">
           <img
-            src="/img/sql-1024x572.jpg"
+            src="./img/sql-1024x572.jpg"
             class="img-fluid rounded-start"
             alt="..."
           />
