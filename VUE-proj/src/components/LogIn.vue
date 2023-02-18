@@ -37,6 +37,7 @@
                 class="form-control"
                 id="floatingInput"
                 placeholder="name@example.com"
+                v-model="user_input.login"
               />
               <label for="floatingInput">Введите логин или почту</label>
             </div>
@@ -51,12 +52,28 @@
                 class="form-control"
                 id="floatingPassword"
                 placeholder="Password"
+                v-model="user_input.password"
               />
               <label for="floatingPassword">Введите пароль</label>
             </div>
 
             <!--   <input id="userLogin" type="text" placeholder="Введите логин или почту" name="username">
           <input id="userPassword" type="text" placeholder="Введите пароль" name="password"> -->
+            <div v-if="user_input.error"
+              class="alert alert-danger d-flex align-items-center"
+              role="alert"
+            >
+              <svg
+                class="bi flex-shrink-0 me-2"
+                width="24"
+                height="24"
+                role="img"
+                aria-label="Danger:"
+              >
+                <use xlink:href="#exclamation-triangle-fill" />
+              </svg>
+              <div>ОШИБКА! Неправильно введен логин или пароль</div>
+            </div>
             <div class="form-check form-switch">
               <input
                 class="form-check-input"
@@ -70,9 +87,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button @click="commit('changeAuth()')" class="btn btn-primary">
-            Вход
-          </button>
+          <button class="btn btn-primary" @click="authorization">Вход</button>
           <form action="/register" method="get">
             <button class="btn btn-secondary">Регистрация</button>
           </form>
@@ -105,28 +120,27 @@
   </svg>
 </template>
 
-<script setup></script>
+<script setup>
+import { useUserStore } from "../stores/userStore";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
+const userStore = useUserStore();
 
-<script>
-import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
+const user_input = ref({
+  login: "",
+  password: "",
+  error: false,
+});
 
-export default {
-  data: function () {
-    return {};
-  },
-  methods: {
-    ...mapMutations({
-      changeAuth: "project/ChangeAuth",
-    }),
-    ...mapActions({}),
-  },
-  computed: {
-    ...mapState({
-      projects: (state) => state.project.projects,
-      isAuth: (state) => state.user.isAuth,
-    }),
-
-    ...mapGetters({}),
-  },
+const authorization = () => {
+  //userStore.getUserbyLogin()
+  const user_ = userStore.getUserbyLogin(user_input.value.login);
+  if (user_.password === user_input.value.password) {
+    router.push(`/user/${user_.id}`);
+    console.log('lol')
+  } else {
+    user_input.value.error = true;
+  }
 };
 </script>

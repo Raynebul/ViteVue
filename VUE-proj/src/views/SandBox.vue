@@ -3,8 +3,12 @@
 
   <div class="top">
     <div class="settings">
-      <div id="Project">Проект: {{ projects[$route.params.id - 1].name }}</div>
-      <div id="Username">от: {{ projects[$route.params.id - 1].author }}</div>
+      <div id="Project">
+        Проект: {{ projectStore.projects[$route.params.id - 1].name }}
+      </div>
+      <div id="Username">
+        от: {{ projectStore.projects[$route.params.id - 1].author }}
+      </div>
     </div>
     <div class="buttons">
       <button form="myform1" class="run1 btn btn-success" type="submit">
@@ -73,19 +77,18 @@
           </div>
           <aside class="query">
             <!--  <form id="myform2" action="/sandbox/<%= data.id %>" method="post"> -->
-            <form id="myform1" action="/sandbox/<%= data.id %>" method="post">
+            <form id="myform1" @submit.prevent="RunCode">
+              <!--@submit.prevent="RunCode()"-->
               <textarea
                 id="outputSQLquery"
                 class="form-control shadow code"
                 name="query"
                 style="background-color: white"
                 spellcheck="false"
+                v-model="projectStore.projects[$route.params.id - 1].query"
               >
               </textarea>
-              <!-- <input type="text" id="secretvalue" value="1" name="secretvalue">-->
             </form>
-            <!--  <input type="text" class="secretvalue" value="1" name="secretvalue">
-           </form> -->
           </aside>
         </div>
       </div>
@@ -148,44 +151,50 @@
             role="tabpanel"
             aria-labelledby="home-tab"
           >
-            <!-- <% if(error == undefined) { %> -->
             <b>База данных Humans</b>
             <table class="table table-striped table-sm">
               <thead>
                 <tr>
-                  <!--
-                  <% if(select.id != undefined) { %>
-                  <th scope="col">id</th>
-                  <% } %> <% if(select.sex != undefined) { %>
-                  <th scope="col">sex</th>
-                  <% } %> <% if(select.name != undefined) { %>
-                  <th scope="col">name</th>
-                  <% } %> <% if(select.surname != undefined) { %>
-                  <th scope="col">surname</th>
-                  <% } %> <% if(select.age != undefined) { %>
-                  <th scope="col">age</th>
-                  <% } %> -->
+                  <th scope="col" v-if="humanStore.humans[0].id != undefined">
+                    id
+                  </th>
+                  <th scope="col" v-if="humanStore.humans[0].sex != undefined">
+                    sex
+                  </th>
+                  <th scope="col" v-if="humanStore.humans[0].name != undefined">
+                    name
+                  </th>
+                  <th
+                    scope="col"
+                    v-if="humanStore.humans[0].surname != undefined"
+                  >
+                    surname
+                  </th>
+                  <th scope="col" v-if="humanStore.humans[0].age != undefined">
+                    age
+                  </th>
                 </tr>
               </thead>
-              <tbody>
-                <!-- <% for(var i=0; i < taskdatabase.length; i++) { %>
+              <tbody v-for="human in humanStore.humans_res" :key="human.id">
                 <tr>
-                  <% if(select.id != undefined) { %>
-                  <th scope="row"><%= taskdatabase[i].id %></th>
-                  <% } %> <% if(select.sex != undefined) { %>
-                  <td><%= taskdatabase[i].sex %></td>
-                  <% } %> <% if(select.name != undefined) { %>
-                  <td><%= taskdatabase[i].name %></td>
-                  <% } %> <% if(select.surname != undefined) { %>
-                  <td><%= taskdatabase[i].surname %></td>
-                  <% } %> <% if(select.age != undefined) { %>
-                  <td><%= taskdatabase[i].age %></td>
-                  <% } %>
+                  <th scope="row" v-if="humanStore.humans[0].id != undefined">
+                    {{ human.id }}
+                  </th>
+                  <td v-if="humanStore.humans[0].sex != undefined">
+                    {{ human.sex }}
+                  </td>
+                  <td v-if="humanStore.humans[0].name != undefined">
+                    {{ human.name }}
+                  </td>
+                  <td v-if="humanStore.humans[0].surname != undefined">
+                    {{ human.surname }}
+                  </td>
+                  <td v-if="humanStore.humans[0].age != undefined">
+                    {{ human.age }}
+                  </td>
                 </tr>
-                <% } %> -->
               </tbody>
             </table>
-            <!--    <% } %> -->
           </div>
           <div
             class="tab-pane fade"
@@ -204,16 +213,14 @@
                   <th scope="col">age</th>
                 </tr>
               </thead>
-              <tbody>
-                <!--         <% for(var i=0; i < rightdatabase.length; i++) { %>
+              <tbody v-for="human in humanStore.humans" :key="human.id">
                 <tr>
-                  <th scope="row"><%= rightdatabase[i].id %></th>
-                  <td><%= rightdatabase[i].sex %></td>
-                  <td><%= rightdatabase[i].name %></td>
-                  <td><%= rightdatabase[i].surname %></td>
-                  <td><%= rightdatabase[i].age %></td>
+                  <th scope="row">{{ human.id }}</th>
+                  <td>{{ human.sex }}</td>
+                  <td>{{ human.name }}</td>
+                  <td>{{ human.surname }}</td>
+                  <td>{{ human.age }}</td>
                 </tr>
-                <% } %> -->
               </tbody>
             </table>
           </div>
@@ -223,10 +230,10 @@
             role="tabpanel"
             aria-labelledby="contact-tab"
           >
-            <!-- <% if(error != undefined) { %> -->
             <div
               class="alert alert-danger d-flex align-items-center"
               role="alert"
+              v-if="humanStore.error != undefined"
             >
               <svg
                 class="bi flex-shrink-0 me-2"
@@ -239,7 +246,6 @@
               </svg>
               <div>ОШИБКА! Неправильно введен запрос</div>
             </div>
-            <!-- <% } %> -->
           </div>
         </div>
       </div>
@@ -338,26 +344,21 @@ textarea {
 
 <script setup>
 import ProjectSettings from "../components/ProjectSettings.vue";
-import "../assets/nav.css";
-</script>
 
-<script>
-import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
+import { useHumanStore } from "../stores/humanStore";
+import { ref } from "vue";
+import "../scss/sandbox.scss";
+import { useProjectStore } from "../stores/projectStore";
 
-export default {
-  data: function () {
-    return {};
-  },
-  methods: {
-    ...mapMutations({}),
-    ...mapActions({}),
-  },
-  computed: {
-    ...mapState({
-      projects: (state) => state.project.projects,
-    }),
+const projectStore = useProjectStore();
 
-    ...mapGetters({}),
-  },
+const humanStore = useHumanStore();
+
+const sql = ref({
+  query: "",
+  script: "",
+});
+const RunCode = () => {
+  humanStore.runCode(sql.value.query);
 };
 </script>

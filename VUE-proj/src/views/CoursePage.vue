@@ -1,24 +1,21 @@
 <template>
   <main>
-    <div id="list-example" class="list-group shadow-lg">
-      <!--  <a class="list-group-item list-group-item-action" href="#list-item-1">Элемент 1</a>
-              <a class="list-group-item list-group-item-action" href="#list-item-2">Элемент 2</a>
-              <a class="list-group-item list-group-item-action" href="#list-item-3">Элемент 3</a>
-              <a class="list-group-item list-group-item-action" href="#list-item-4">Элемент 4</a> -->
-      <!--  <% for(var i=0; i < pages; i++) { %> <% if(data.id === i+1) { %> -->
-      <!--  <a
-        class="list-group-item list-group-item-action"
-        id="currentId"
-        href="/course/<%= courseid %>/<%= i+1 %>"
-        ><%= i+1 %></a
-      >
-      <% } else { %>
-      <a
-        class="list-group-item list-group-item-action"
-        href="/course/<%= courseid %>/<%= i+1 %>"
-        ><%= i+1 %></a
-      >
-      <% } %> <% } %> -->
+    <div class="list-group shadow-lg list-example">
+      <form v-for="page_ in courseStore.courses[id - 1].pages" :key="page_.id_">
+        <a
+          v-if="page_.id_ === route.params.page"
+          class="list-group-item list-group-item-action"
+          id="currentId"
+          @click="$router.push(`/course/${id}/${page_.id_}`)"
+          >{{ page_.id_ }}</a
+        >
+        <a
+          v-else
+          class="list-group-item list-group-item-action"
+          @click="$router.push(`/course/${id}/${page_.id_}`)"
+          >{{ page_.id_ }}</a
+        >
+      </form>
     </div>
     <div class="container-fluid">
       <div class="row g-0">
@@ -67,13 +64,20 @@
         </div>
         <div class="col-6" style="height: 22rem">
           <div class="elem3">
-            <!-- <h3><%= data.id %>. <%= data.taskName %></h3> -->
+            <h3>
+              {{
+                courseStore.courses[id - 1].pages[$route.params.page - 1].id_
+              }}.
+              {{
+                courseStore.courses[id - 1].pages[$route.params.page - 1].name
+              }}
+            </h3>
           </div>
           <div class="bg-primary taskpanel">Задание</div>
           <div class="overflow-auto" style="height: 82%">
             <p>
               {{
-                courses[$route.params.id - 1].pages[$route.params.page - 1].text
+                courseStore.courses[id - 1].pages[$route.params.page - 1].text
               }}
             </p>
             <!-- <% var newblock = data.taskDescription %> <%- include("blocks/" +
@@ -251,13 +255,13 @@
           <!--   <% if(data.id === pages) { %> -->
           <a
             v-if="
-              courses[$route.params.id - 1].pages[$route.params.page - 1].id_ !=
-              courses[$route.params.id - 1].pageCount
+              parseInt($route.params.page) !==
+              courseStore.courses[id - 1].pageCount
             "
             @click="
               $router.push(
-                `/course/${courses[$route.params.id - 1].id}/${
-                  courses[$route.params.id - 1].pages[$route.params.page].id_
+                `/course/${$route.params.id}/${
+                  parseInt($route.params.page) + 1
                 }`
               )
             "
@@ -266,7 +270,7 @@
           >
           <a
             v-else
-            @click="$router.push(`/course/${courses[$route.params.id - 1].id}`)"
+            @click="$router.push(`/course/${$route.params.id}`)"
             class="continue btn btn-primary btn-lg"
             >Дальше</a
           >
@@ -284,302 +288,16 @@
   </main>
 </template>
 
-<style>
-.panel,
-.answer,
-.task,
-.script,
-.sqlsquare1,
-.output {
-  background-color: #ffffff;
-}
-
-.SQL-container,
-.bottompanel {
-  height: 350px;
-}
-.script,
-.output {
-  border-right: 1px solid #7c898a;
-}
-
-.task,
-.answer {
-  border-left: 1px solid #7c898a;
-  border-right: 1px solid #7c898a;
-}
-
-textarea {
-  width: 100%;
-  height: 350px;
-  background-color: #ffffff;
-  border: none;
-  outline: none;
-  padding: 15px;
-  font-size: 17px;
-}
-
-.answer {
-  height: 300px;
-}
-
-.task {
-  height: 400px;
-}
-
-header,
-.panel {
-  background-color: #3a4350;
-}
-
-.sqlsquare1,
-.sqlsquare2,
-#run,
-.clear {
-  display: flex;
-  justify-content: center; /* align horizontal */
-  align-items: center; /* align vertical */
-}
-
-main {
-  display: flex;
-  width: 100%;
-}
-
-.choicecourse {
-  width: 4%;
-  background-color: #869297;
-  font-size: 25px;
-  text-align: center;
-  color: white;
-}
-.choicecourse span {
-  display: block;
-  padding-bottom: 5px;
-  padding-top: 5px;
-}
-
-.workpanel {
-  width: 48%;
-}
-
-.workpanel2 {
-  width: 48%;
-  margin-right: 15px;
-}
-
-.SQL-panel {
-  display: flex;
-}
-
-.elem1 {
-  width: 100%;
-  display: flex;
-}
-
-.elem3 {
-  width: 100%;
-  height: 10%;
-}
-
-.elem3 span {
-  margin-left: 10px;
-}
-
-.sqlsquare1,
-.sqlsquare2 {
-  width: 120px;
-  height: 50px;
-  font-weight: bold;
-  font-size: 20px;
-}
-.sqlsquare2 {
-  /*   background-color: #A3B1B4; */
-  background-color: #edf3f4;
-}
-
-.elem2 {
-  display: flex;
-}
-
-#run,
-.clear {
-  margin-top: 10px;
-  height: 30px;
-
-  border: none;
-  cursor: pointer;
-}
-
-#run {
-  margin-right: 10px;
-}
-
-.clear {
-  margin-right: 15px;
-}
-
-.task,
-.script {
-  width: 100%;
-}
-
-.bottompanel {
-  width: 100%;
-}
-
-.script {
-  margin-right: 10px;
-}
-
-.task {
-  margin-left: 10px;
-  font-weight: bold;
-}
-
-.taskpanel {
-  height: 8%;
-  color: white;
-  display: flex;
-  align-items: center; /* align vertical */
-}
-
-.taskpanel span {
-  margin-left: 10px;
-}
-
-.SQL-container {
-  display: flex;
-  width: 100%;
-}
-
-.panel {
-  padding: 0;
-  height: 40px;
-  font-size: 25px;
-}
-
-.bottompanel {
-  display: flex;
-}
-
-.output {
-  width: 100%;
-  margin-right: 10px;
-}
-
-.answer {
-  width: 100%;
-  margin-left: 10px;
-  border-top: 1px solid #7c898a;
-  display: flex;
-}
-
-.completed,
-.continue {
-  margin-top: auto;
-  margin-bottom: 20px;
-}
-
-.completed {
-  margin-left: 20px;
-}
-
-.completed span {
-  margin-left: 15px;
-}
-
-.continue {
-  margin-left: auto;
-  margin-right: 20px;
-  align-items: center; /* align vertical */
-  border: none;
-  cursor: pointer;
-}
-
-/* модальное окно */
-
-.tasktext {
-  /*padding: 10px;*/
-  /* overflow: scroll; */
-  /*font-size: 15px; */
-  height: 90%;
-  width: 100%;
-}
-
-#currentId {
-  background-color: rgb(81, 77, 86);
-}
-
-.tasktextcourse {
-  color: rgb(81, 77, 86);
-  font: sans-serif;
-  font-size: 1em;
-}
-
-.tablinks {
-  background-color: #3a4350;
-  padding: 10px;
-  height: 40px;
-  color: white;
-  text-decoration: none;
-  font: 20px Arial;
-  border: none;
-}
-
-.tablinks:hover,
-.tablinks.active {
-  background-color: #2d2f38;
-}
-
-.panel {
-  overflow: hidden;
-}
-
-.tabcontent {
-  display: none;
-}
-
-#list-example,
-.list-group-item {
-  background-color: #292b2c;
-  -webkit-border-radius: 0 !important;
-  -moz-border-radius: 0 !important;
-  border-radius: 0 !important;
-}
-
-.list-group-item {
-  border: none;
-  color: #fff;
-}
-
-.code {
-  height: 20rem;
-  min-height: 20rem;
-  max-height: 20rem;
-}
-</style>
-
 <script setup>
-import "../assets/nav.css";
+import "../scss/nav.scss";
+import "../scss/coursePage.scss";
+import { useCourseStore } from "../stores/courseStore";
+import { useRoute } from "vue-router";
+const route = useRoute();
+const id = route.params.id;
+//let page = route.params.page;
+//console.log(id, page, nextpage)
+const courseStore = useCourseStore();
 </script>
 
-<script>
-import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
-export default {
-  data: function () {
-    return {};
-  },
-  methods: {
-    ...mapMutations({}),
-    ...mapActions({}),
-  },
-  computed: {
-    ...mapState({
-      courses: (state) => state.course.courses,
-    }),
-
-    ...mapGetters({}),
-  },
-};
-</script>
+<script></script>

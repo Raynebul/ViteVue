@@ -1,0 +1,89 @@
+
+.top {
+    margin: 0;
+    padding: 0;
+    height: 70px;
+    display: flex;
+  }
+  
+  .buttons {
+    margin-left: auto;
+    display: flex;
+    padding: 10px;
+  }
+  
+  .run1, .button1{
+   margin-bottom: auto;
+   margin-right: 10px;
+   margin-left: 10px;
+  }
+  
+  .clear1 {
+    margin-bottom: auto;
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: 10px;
+  } 
+  
+  hr { 
+      display: block; height: 1px;
+      border: 0; border-top: 1px solid #525861;
+      padding: 0; 
+      margin-bottom: auto;
+  }
+  
+  .elem1, .elem2 {
+    display: flex;
+  }
+  
+  
+  .sqlsquare1, .sqlsquare2 {
+  
+    text-align: center;
+  }
+  
+  
+  
+  .query, .script {
+    margin-top: auto;
+    height: 320px;
+  }
+  
+  textarea {
+    width: 100%;
+    height: 320px;
+    background-color: #EDF3F4;
+    border: none;
+    outline: none;
+    padding: 15px;
+    font-size: 17px;
+  }
+  
+  
+  .panel {
+    margin: 0;
+    padding: 0; 
+    background-color: #3A4350;
+    height: 40px;
+    font-size: 25px;
+  }
+  
+  .output {
+    height: 300px;
+    width: 100%;
+  }
+  
+  #secondline {
+    margin-top: auto;
+  }
+  
+  
+  /* модальное окно */
+  
+   .code{ 
+  
+    height:20rem; 
+    min-height:20rem; 
+    max-height:20rem; 
+  }
+  

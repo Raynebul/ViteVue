@@ -1,5 +1,5 @@
 <script setup>
-import { RouterView } from "vue-router";
+//import { RouterView } from "vue-router";
 import HeaderNav from "./components/HeaderNav.vue";
 import FooterNav from "./components/FooterNav.vue";
 //import HelloWorld from './components/HelloWorld.vue' RouterLink
@@ -10,7 +10,7 @@ import FooterNav from "./components/FooterNav.vue";
   <HeaderNav />
   <main>
     <div class="container-fluid">
-      <RouterView />
+      <RouterView /> 
     </div>
   </main>
 

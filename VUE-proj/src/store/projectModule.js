@@ -34,8 +34,7 @@ export const projectModule = {
   getters: {
 
   },
-  mutations: {},
-  actions: {
+  mutations: {
     createProject(state) {
       const { ...project } = state.form;
       state.projects.push({
@@ -45,6 +44,9 @@ export const projectModule = {
 
       state.form.name = state.form.description = "";
     },
+  },
+  actions: {
+
     deleteProject(state, id) {
       state.projects = state.projects.filter((c) => c.id !== id);
     },

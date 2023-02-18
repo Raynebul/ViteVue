@@ -42,10 +42,15 @@ const routes = [
     component: () => import("../views/SandBox.vue"),
   },
   {
-    path: "/user",
-    name: "user",
+    path: "/user/:id",
+    name: "userid",
     component: () => import("../views/UserCard.vue"),
   },
+  {
+    path: "/k1/k2",
+    name: "k1k2",
+    component: () => import("../views/MenuCourse.vue"),
+  }
 ];
 
 const router = createRouter({

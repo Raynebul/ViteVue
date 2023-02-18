@@ -10,8 +10,12 @@
       <div class="modal-content">
         <div class="modal-header">
           <div class="settingsnameproject">
-            <h5 class="modal-title" id="exampleModalLabel">Проект:</h5>
-            <h4 class="modal-title">от:</h4>
+            <h5 class="modal-title" id="exampleModalLabel">
+              Проект: {{ projectStore.projects[$route.params.id - 1].name }}
+            </h5>
+            <h4 class="modal-title">
+              от: {{ projectStore.projects[$route.params.id - 1].author }}
+            </h4>
           </div>
           <button
             type="button"
@@ -27,12 +31,12 @@
               type="text"
               placeholder="Введите текст"
               name="projectDescription"
+              v-model="projectStore.projects[$route.params.id - 1].description"
             ></textarea>
-<!--<%= data.projectDescription %></textarea
+            <div
+              v-if="projectStore.projects[$route.params.id - 1].autosave"
+              class="form-check form-switch"
             >
-            -->
-            <div class="form-check form-switch">
-              <!--  <% if(data.autosave=="true") { %>-->
               <input
                 name="autosave"
                 class="form-check-input"
@@ -40,21 +44,26 @@
                 checked
                 id="flexSwitchCheckDefault"
               />
-              <!-- <% } else { %>
+              <label class="form-check-label" for="flexSwitchCheckDefault"
+                >Автосохранения</label
+              >
+            </div>
+            <div v-else class="form-check form-switch">
               <input
                 name="autosave"
                 class="form-check-input"
                 type="checkbox"
                 id="flexSwitchCheckDefault"
-              />-->
-              <!-- <% } %>-->
+              />
               <label class="form-check-label" for="flexSwitchCheckDefault"
                 >Автосохранения</label
               >
             </div>
 
-            <div class="form-check form-switch">
-              <!--   <% if(data.private=="true") { %>-->
+            <div
+              v-if="projectStore.projects[$route.params.id - 1].private"
+              class="form-check form-switch"
+            >
               <input
                 name="private"
                 class="form-check-input"
@@ -62,14 +71,17 @@
                 checked
                 id="flexSwitchCheckDefault"
               />
-              <!--   <% } else { %>
+              <label class="form-check-label" for="flexSwitchCheckDefault"
+                >Приватный</label
+              >
+            </div>
+            <div v-else class="form-check form-switch">
               <input
                 name="private"
                 class="form-check-input"
                 type="checkbox"
                 id="flexSwitchCheckDefault"
-              />-->
-              <!--<% } %> -->
+              />
               <label class="form-check-label" for="flexSwitchCheckDefault"
                 >Приватный</label
               >
@@ -89,6 +101,10 @@
   </div>
 </template>
 
-<style>
+<style></style>
 
-</style>
+<script setup>
+import { useProjectStore } from "../stores/projectStore";
+
+const projectStore = useProjectStore();
+</script>

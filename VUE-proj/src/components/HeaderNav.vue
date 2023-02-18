@@ -60,19 +60,19 @@ import LogIn from "./LogIn.vue";
           <!--   <% if(username === undefined) { %> -->
           <li class="nav-item">
             <a
-              v-if="!isAuth"
               class="nav-link"
               data-bs-target="#exampleModal"
               data-bs-toggle="modal"
               >Профиль</a
             >
+            <!--
             <a
-              v-else
+              
               class="nav-link"
               @click="$router.push(`/user`)"
               data-bs-toggle="modal"
               >Профиль</a
-            >
+            >-->
           </li>
           <!-- <% } else { %> -->
           <!-- <li class="nav-item">
@@ -86,12 +86,15 @@ import LogIn from "./LogIn.vue";
     </div>
   </nav>
 
-  <LogIn />
+  <LogIn /> 
 </template>
 
 <style></style>
 
 <script>
+/*
+
+
 import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 
 export default {
@@ -112,5 +115,5 @@ export default {
 
     ...mapGetters({}),
   },
-};
+}; */
 </script>

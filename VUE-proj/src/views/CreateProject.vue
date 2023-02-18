@@ -3,83 +3,76 @@
     <div id="projectdata">
       <!--  <% if(username != undefined) { %>  -->
       <div>Выберите готовые проекты, созданные вами:</div>
+      <!--<div>{{ projectStore.projects }}</div> -->
       <!-- <% for(var i=0; i < data.length; i++) { %> -->
-      <div v-if="isAuth">
-        <div v-for="project in projects" :key="project.id">
-          <a class="projectlink" @click="$router.push(`/sandbox/${project.id}`)">
-            <div class="card mb-3 shadow-sm" style="max-width: 18rem">
-              <div class="card-header bg-primary text-white">
-                {{ project.name }}
-              </div>
-              <div class="card-body">
-                <p class="card-text">{{ project.description }}</p>
-              </div>
-            </div>
-            <!-- <div class="projectblock">        
-             <div class="projectbox">
-             <p class="projectname"><%= data[i].projectname %></p>
-             <p class="projectdate">12.01.2023</p>      
-            </div>  
-            </div> -->
-          </a>
-        </div>
+      <div>
+        <projectPost
+          v-for="project in projectStore.projects"
+          :key="project.id"
+          :project="project"
+          
+        />
       </div>
       <!--  <% } %> <% } else { %>-->
-      <div v-else>Войдите, чтобы увидеть все созданные вами проекты</div>
+      <div>Войдите, чтобы увидеть все созданные вами проекты</div>
       <!--<% } %>-->
     </div>
-
-    <!-- <% if(username != undefined) { %>-->
-    <p>Или создайте новый проект:</p>
-    <form method="POST" action="/sandbox">
-      <p>Имя проекта</p>
-      <input
-        name="projectname"
-        class="form-control"
-        type="text"
-        placeholder="Имя проекта"
-        aria-label="default input example"
-      />
-      <p>Описание проекта</p>
-      <input
-        name="projectDescription"
-        class="form-control"
-        type="text"
-        placeholder="Описание проекта"
-        aria-label="default input example"
-      />
-
-      <!-- <input type="text" id="userProjectname" name="projectname">
-         
-         <input id="description" type="text" placeholder="Введите текст" name="projectDescription"></input> -->
-
-      <div class="form-check form-switch">
+    <div>
+      <!-- <% if(username != undefined) { %>-->
+      <p>Или создайте новый проект:</p>
+      <form @submit.prevent="CreateProject">
+        <p>Имя проекта</p>
         <input
-          class="form-check-input"
-          type="checkbox"
-          id="flexSwitchCheckDefault"
-          name="autosave"
+          v-model="project_input.name"
+          name="projectname"
+          class="form-control"
+          type="text"
+          placeholder="Имя проекта"
+          aria-label="default input example"
         />
-        <label class="form-check-label" for="flexSwitchCheckDefault"
-          >Автосохранения</label
-        >
-      </div>
-
-      <div class="form-check form-switch">
+        <p>Описание проекта</p>
         <input
-          class="form-check-input"
-          type="checkbox"
-          id="flexSwitchCheckDefault"
-          name="private"
+          v-model="project_input.description"
+          name="projectDescription"
+          class="form-control"
+          type="text"
+          placeholder="Описание проекта"
+          aria-label="default input example"
         />
-        <label class="form-check-label" for="flexSwitchCheckDefault"
-          >Приватный</label
-        >
-      </div>
 
-      <button class="btn btn-primary btn-lg">Создать новый проект</button>
-    </form>
-    <!-- <% } else { %>-->
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="flexSwitchCheckDefault"
+            name="autosave"
+          />
+          <label class="form-check-label" for="flexSwitchCheckDefault"
+            >Автосохранения</label
+          >
+        </div>
+
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="flexSwitchCheckDefault"
+            name="private"
+          />
+          <label class="form-check-label" for="flexSwitchCheckDefault"
+            >Приватный</label
+          >
+        </div>
+        <!--    @click="projectStore.addProject()" -->
+        <button
+          type="submit"
+          class="btn btn-primary btn-lg"
+        >
+          Создать новый проект
+        </button>
+      </form>
+      <!-- <% } else { %>-->
+    </div>
     <a
       class="btn btn-primary btn-lg"
       data-bs-target="#exampleModal"
@@ -90,27 +83,28 @@
   </div>
 </template>
 
-<script>
+<script setup>
 //import db from "../database";
-import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
+import { useProjectStore } from "../stores/projectStore";
+import projectPost from "../components/ProjectPost.vue";
+import { ref } from "vue";
 
-export default {
-  data: function () {
-    return {};
-  },
-  methods: {
-    ...mapMutations({
-    }),
-    ...mapActions({}),
-  },
-  computed: {
-    ...mapState({
-      projects: (state) => state.project.projects,
-      isAuth: (state) => state.user.isAuth,
-    }),
+const projectStore = useProjectStore();
 
-    ...mapGetters({}),
-  },
+const project_input = ref({
+  name: "",
+  description: "",
+});
+
+const CreateProject = () => {
+  projectStore.addProject(
+    project_input.value.name,
+    project_input.value.description
+  );
+  project_input.value={
+    name:"",
+    description:"",
+  }
 };
 </script>
 

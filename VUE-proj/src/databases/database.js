@@ -1,7 +1,7 @@
-// var sqlite3 = require("sqlite3").verbose();
+var sqlite3 = require("sqlite3").verbose();
 // var md5 = require("md5");
-import sqlite3 from "sqlite3";
-sqlite3.verbose();
+//import sqlite3 from "sqlite3";
+//sqlite3.verbose();
 //Import sqlite3 from "sqlite3"
 //Import sqlite3 from "sqlite3"
 //Import md5 from "md5"
@@ -300,7 +300,7 @@ function updateProjectCode(id, SQLscript, SQLquery, callback) {
   });
 }
 
-function runCourseCode(codetext, callback) {
+function runCode(codetext, callback) {
   db.all(codetext, [], function (error, humans) {
     callback(error, humans);
   });
@@ -540,13 +540,13 @@ function selectUserByEmail(email, password, callback) {
 //   );
 // };
 
-module.exports = {
+export default {
   db,
   addProject,
   deleteProject,
   updateProject,
   updateProjectCode,
-  runCourseCode,
+  runCode,
   addUser,
   selectCourseById,
   selectTaskBydPage,

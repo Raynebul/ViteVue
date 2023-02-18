@@ -2,11 +2,9 @@
   <main>
     <div class="coursestatus">
       <div class="courseflag">
-        <p class="coursenamestyle">{{ courses[$route.params.id - 1].name }}</p>
-        <p>Описание курса: {{ courses[$route.params.id - 1].description }}</p>
-        <p>
-          Сколько страниц: 0 из {{ courses[$route.params.id - 1].pageCount }}
-        </p>
+        <p class="coursenamestyle">{{ courseStore.courses[id - 1].name }}</p>
+        <p>Описание курса: {{ courseStore.courses[id - 1].description }}</p>
+        <p>Сколько страниц: 0 из {{ courseStore.courses[id - 1].pageCount }}</p>
         <p>Сложность: Легкая</p>
       </div>
       <div class="course_bottom">
@@ -67,16 +65,7 @@
           style="width: 15rem; height: 11rem; margin-left: 15px; padding: 10px"
         >
           <div clas="card-body">
-            <a
-              class="btn btn-primary"
-              @click="
-                $router.push(
-                  `/course/${courses[$route.params.id - 1].id}/${
-                    courses[$route.params.id - 1].pages[0].id_
-                  }`
-                )
-              "
-            >
+            <a class="btn btn-primary" @click="$router.push(`/course/${id}/1`)">
               Перейти к курсу
             </a>
             <p>Прогресс</p>
@@ -99,52 +88,13 @@
   </main>
 </template>
 
-<style>
-.coursenamestyle {
-  font-size: 2em;
-  color: rgb(255, 255, 255);
-  margin-top: auto;
-  padding-top: 50px;
+<style></style>
 
-  font-weight: bolder;
-  font-family: sans-serif;
-}
-
-.coursestatus {
-}
-
-.courseflag {
-  background-color: rgb(11, 45, 83);
-  padding-left: 100px;
-  padding-bottom: 50px;
-  color: rgb(255, 255, 255);
-}
-
-.course_bottom {
-  display: flex;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  margin-right: 20px;
-  margin-left: 20px;
-}
-</style>
-
-<script>
-import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
-export default {
-  data: function () {
-    return {};
-  },
-  methods: {
-    ...mapMutations({}),
-    ...mapActions({}),
-  },
-  computed: {
-    ...mapState({
-      courses: (state) => state.course.courses,
-    }),
-
-    ...mapGetters({}),
-  },
-};
+<script setup>
+import "../scss/courseTitle.scss";
+import { useCourseStore } from "../stores/courseStore";
+import { useRoute } from "vue-router";
+const route = useRoute();
+const id = route.params.id;
+const courseStore = useCourseStore();
 </script>
